@@ -9,3 +9,5 @@ export const selectSauces = (state: RootState) =>
   state.ingredients.filter((ingredient) => ingredient.type == 'sauce');
 export const selectIsLoading = (state: RootState) => state.isLoading;
 export const selectError = (state: RootState) => state.error;
+export const selectConstructorItems = (state: RootState) =>
+  state.constructorItems;
