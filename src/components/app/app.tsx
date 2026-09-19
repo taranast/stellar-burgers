@@ -5,16 +5,29 @@ import styles from './app.module.css';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Preloader } from '@ui';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { useEffect } from 'react';
+import { fetchIngredients } from '../../services/slices/mainSlice';
+import {
+  selectError,
+  selectIngredients,
+  selectIsLoading
+} from '../../services/selectors/mainSelectors';
 
 const App = () => {
-  /** TODO: взять переменные из стора */
-  const isIngredientsLoading = false;
-  const ingredients = [];
-  const error = null;
+  const isIngredientsLoading = useSelector(selectIsLoading);
+  const ingredients = useSelector(selectIngredients);
+  const error = useSelector(selectError);
   const navigate = useNavigate();
   const onClose = () => {
     navigate(-1);
   };
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
@@ -41,7 +54,7 @@ const App = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='' onClose={onClose}>
+              <Modal title='Детали ингредиента' onClose={onClose}>
                 <IngredientDetails />
               </Modal>
             }
