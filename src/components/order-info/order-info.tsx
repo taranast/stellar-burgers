@@ -4,7 +4,10 @@ import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
 import { selectIngredients } from '../../services/selectors/mainSelectors';
-import { selectOrderData } from '../../services/selectors/feedSelectors';
+import {
+  selectIsOrderLoading,
+  selectOrderData
+} from '../../services/selectors/feedSelectors';
 import { useParams } from 'react-router-dom';
 import { fetchOrder } from '../../services/slices/feedSlice';
 
@@ -19,6 +22,7 @@ export const OrderInfo: FC = () => {
       dispatch(fetchOrder(Number(number)));
     }
   }, [dispatch, number]);
+  const orderDataIsLoading = useSelector(selectIsOrderLoading);
 
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
@@ -61,7 +65,7 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
+  if (!orderInfo || orderDataIsLoading) {
     return <Preloader />;
   }
 

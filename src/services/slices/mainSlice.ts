@@ -1,6 +1,6 @@
-import { getIngredientsApi } from '@api';
+import { getIngredientsApi, orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 import { v4 } from 'uuid';
 
 interface MainState {
@@ -11,6 +11,8 @@ interface MainState {
     bun: TIngredient | null;
     ingredients: TConstructorIngredient[];
   };
+  orderRequest: boolean;
+  orderData: TOrder | null;
 }
 
 const initialState: MainState = {
@@ -20,13 +22,17 @@ const initialState: MainState = {
   constructorItems: {
     bun: null,
     ingredients: []
-  }
+  },
+  orderRequest: false,
+  orderData: null
 };
 
 export const fetchIngredients = createAsyncThunk(
   'main/fetchIngredients',
   getIngredientsApi
 );
+
+export const sendOrder = createAsyncThunk('main/sendOrder', orderBurgerApi);
 
 const mainSlice = createSlice({
   name: 'main',
@@ -70,6 +76,10 @@ const mainSlice = createSlice({
         bun: null,
         ingredients: []
       };
+    },
+    cleanOrder: (state) => {
+      state.orderData = null;
+      state.orderRequest = false;
     }
   },
   extraReducers: (builder) => {
@@ -87,6 +97,20 @@ const mainSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message || 'Ошибка загрузки ингредиентов';
         state.ingredients = [];
+      })
+      .addCase(sendOrder.pending, (state) => {
+        state.orderRequest = true;
+      })
+      .addCase(sendOrder.fulfilled, (state, action) => {
+        state.orderRequest = false;
+        state.orderData = {
+          ...action.payload.order,
+          ingredients: []
+        };
+      })
+      .addCase(sendOrder.rejected, (state) => {
+        state.orderRequest = false;
+        state.orderData = null;
       });
   }
 });
@@ -98,5 +122,6 @@ export const {
   deleteIngredient,
   moveUp,
   moveDown,
-  cleanConstructor
+  cleanConstructor,
+  cleanOrder
 } = mainSlice.actions;

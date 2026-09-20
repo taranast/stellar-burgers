@@ -9,10 +9,8 @@ interface FeedState {
     totalToday: number;
   };
   isLoading: boolean;
-  error: string;
   orderData: TOrder | null;
   isOrderLoading: boolean;
-  orderError: string;
 }
 
 const initialState: FeedState = {
@@ -22,10 +20,8 @@ const initialState: FeedState = {
     totalToday: 0
   },
   isLoading: false,
-  error: '',
   orderData: null,
-  isOrderLoading: false,
-  orderError: ''
+  isOrderLoading: false
 };
 
 export const fetchFeeds = createAsyncThunk('feed/fetchFeeds', getFeedsApi);
@@ -42,16 +38,13 @@ const feedSlice = createSlice({
     builder
       .addCase(fetchFeeds.pending, (state) => {
         state.isLoading = true;
-        state.error = '';
       })
       .addCase(fetchFeeds.fulfilled, (state, action) => {
         state.isLoading = false;
         state.feed = action.payload;
-        state.error = '';
       })
-      .addCase(fetchFeeds.rejected, (state, action) => {
+      .addCase(fetchFeeds.rejected, (state) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка загрузки ленты заказов';
         state.feed = {
           orders: [],
           total: 0,
@@ -60,16 +53,13 @@ const feedSlice = createSlice({
       })
       .addCase(fetchOrder.pending, (state) => {
         state.isOrderLoading = true;
-        state.orderError = '';
       })
       .addCase(fetchOrder.fulfilled, (state, action) => {
         state.isOrderLoading = false;
         state.orderData = action.payload.orders[0];
-        state.orderError = '';
       })
-      .addCase(fetchOrder.rejected, (state, action) => {
+      .addCase(fetchOrder.rejected, (state) => {
         state.isOrderLoading = false;
-        state.orderError = action.error.message || 'Ошибка загрузки заказа';
         state.orderData = null;
       });
   }

@@ -11,3 +11,5 @@ export const selectIsLoading = (state: RootState) => state.main.isLoading;
 export const selectError = (state: RootState) => state.main.error;
 export const selectConstructorItems = (state: RootState) =>
   state.main.constructorItems;
+export const selectOrderRequest = (state: RootState) => state.main.orderRequest;
+export const selectOrderData = (state: RootState) => state.main.orderData;

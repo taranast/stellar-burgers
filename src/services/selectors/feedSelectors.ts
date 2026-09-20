@@ -6,5 +6,6 @@ export const selectFeed = (state: RootState) => ({
   totalToday: state.feed.feed.totalToday
 });
 export const selectIsLoading = (state: RootState) => state.feed.isLoading;
-export const selectError = (state: RootState) => state.feed.error;
 export const selectOrderData = (state: RootState) => state.feed.orderData;
+export const selectIsOrderLoading = (state: RootState) =>
+  state.feed.isOrderLoading;
