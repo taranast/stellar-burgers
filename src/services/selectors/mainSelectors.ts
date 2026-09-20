@@ -1,13 +1,13 @@
 import { RootState } from '../store';
 
-export const selectIngredients = (state: RootState) => state.ingredients;
+export const selectIngredients = (state: RootState) => state.main.ingredients;
 export const selectBuns = (state: RootState) =>
-  state.ingredients.filter((ingredient) => ingredient.type == 'bun');
+  state.main.ingredients.filter((ingredient) => ingredient.type == 'bun');
 export const selectMains = (state: RootState) =>
-  state.ingredients.filter((ingredient) => ingredient.type == 'main');
+  state.main.ingredients.filter((ingredient) => ingredient.type == 'main');
 export const selectSauces = (state: RootState) =>
-  state.ingredients.filter((ingredient) => ingredient.type == 'sauce');
-export const selectIsLoading = (state: RootState) => state.isLoading;
-export const selectError = (state: RootState) => state.error;
+  state.main.ingredients.filter((ingredient) => ingredient.type == 'sauce');
+export const selectIsLoading = (state: RootState) => state.main.isLoading;
+export const selectError = (state: RootState) => state.main.error;
 export const selectConstructorItems = (state: RootState) =>
-  state.constructorItems;
+  state.main.constructorItems;
