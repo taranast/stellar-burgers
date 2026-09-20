@@ -23,7 +23,7 @@ import {
   selectIngredients,
   selectIsLoading
 } from '../../services/selectors/mainSelectors';
-import { ProtectedRoute, AuthRoute } from '../protected-routes';
+import { ProtectedRoute } from '../protected-routes';
 
 const App = () => {
   const location = useLocation();
@@ -63,33 +63,33 @@ const App = () => {
             <Route
               path='/login'
               element={
-                <AuthRoute>
+                <ProtectedRoute onlyUnAuth>
                   <Login />
-                </AuthRoute>
+                </ProtectedRoute>
               }
             />
             <Route
               path='/register'
               element={
-                <AuthRoute>
+                <ProtectedRoute onlyUnAuth>
                   <Register />
-                </AuthRoute>
+                </ProtectedRoute>
               }
             />
             <Route
               path='/forgot-password'
               element={
-                <AuthRoute>
+                <ProtectedRoute onlyUnAuth>
                   <ForgotPassword />
-                </AuthRoute>
+                </ProtectedRoute>
               }
             />
             <Route
               path='/reset-password'
               element={
-                <AuthRoute>
+                <ProtectedRoute onlyUnAuth>
                   <ResetPassword />
-                </AuthRoute>
+                </ProtectedRoute>
               }
             />
             <Route
