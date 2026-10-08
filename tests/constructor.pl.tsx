@@ -1,5 +1,15 @@
 import { test, expect } from '@playwright/test';
 
+const bunName = "Краторная булка N-200i";
+const ingredientName = "Биокотлета из марсианской Магнолии"
+const nutrition = {
+  calories: '420',
+  proteins: '80',
+  fat: '24',
+  carbohydrates: '53'
+}
+const bunPrice = 1255;
+const ingredientPrice = 424;
 
 test.describe('Constructor tests', () => {
   test.beforeEach(async ({page}) => {
@@ -21,8 +31,8 @@ test.describe('Constructor tests', () => {
     await bun.getByRole('button', {name: 'Добавить'}).click();
     const bunTop = page.getByTestId('bun-top');
     const bunBottom = page.getByTestId('bun-bottom');
-    await expect(bunTop).toContainText(/булка/i);
-    await expect(bunBottom).toContainText(/булка/i);
+    await expect(bunTop).toContainText(bunName);
+    await expect(bunBottom).toContainText(bunName);
   })
 
   test('add ingredient', async ({page}) => {
@@ -41,27 +51,18 @@ test.describe('Constructor tests', () => {
     await bun.getByRole('button', {name: 'Добавить'}).click();
     const addIngredient = ingredients.filter({hasText: /котлета/i}).first();
     await addIngredient.getByRole('button', {name: 'Добавить'}).click();
-    const bunPrice = 1255;
-    const ingredientPrice = 424;
     const price = bunPrice * 2 + ingredientPrice;
-    const totalPrice = page.getByTestId('total-price').locator('p');
+    const totalPrice = page.getByTestId('total-price');
     await expect(totalPrice).toHaveText(String(price))
   })
 
   test('show modal', async ({page}) => {
     const ingredients = page.getByTestId('burger-ingredient');
     const bun = ingredients.filter({ hasText: /булка/i}).first();
-    const bunName = (await bun.locator('p').last().textContent())?.trim();
-    const nutrition = {
-      calories: '420',
-      proteins: '80',
-      fat: '24',
-      carbohydrates: '53'
-    }
     await bun.click();
     const modal = page.getByTestId('modal');
     await expect(modal).toBeVisible();
-    await expect(modal).toContainText(bunName ?? '');
+    await expect(modal).toContainText(bunName);
     await expect(modal).toContainText(nutrition.calories);
     await expect(modal).toContainText(nutrition.proteins);
     await expect(modal).toContainText(nutrition.fat);
@@ -105,8 +106,6 @@ test.describe('Constructor tests', () => {
     ]);
     await page.goto('/');
     const ingredients = page.getByTestId('burger-ingredient');
-    const bunName = 'Краторная булка N-200i';
-    const ingredientName = 'Биокотлета из марсианской Магнолии';
     const bun = ingredients.filter({hasText: bunName}).first();
     await bun.getByRole('button', {name: 'Добавить'}).click();
     const ingredient = ingredients.filter({hasText: ingredientName}).first();
