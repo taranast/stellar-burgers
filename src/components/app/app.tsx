@@ -24,12 +24,16 @@ import {
   selectIsLoading
 } from '../../services/selectors/mainSelectors';
 import { ProtectedRoute } from '../protected-routes';
+import { getCookie } from '../../utils/cookie';
+import { fetchUser, setAuthChecked } from '../../services/slices/userSlice';
+import { selectIsAuthChecked } from '../../services/selectors/userSelectors';
 
 const App = () => {
   const location = useLocation();
   const background = location.state?.background;
   const isIngredientsLoading = useSelector(selectIsLoading);
   const ingredients = useSelector(selectIngredients);
+  const isAuthChecked = useSelector(selectIsAuthChecked);
   const error = useSelector(selectError);
   const navigate = useNavigate();
   const onClose = () => {
@@ -45,6 +49,15 @@ const App = () => {
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
+
+  useEffect(() => {
+    const accessToken = getCookie('accessToken');
+    if (accessToken) {
+      dispatch(fetchUser());
+    } else {
+      dispatch(setAuthChecked());
+    }
+  }, [dispatch, isAuthChecked]);
 
   return (
     <div className={styles.app}>
