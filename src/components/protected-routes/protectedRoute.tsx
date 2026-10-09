@@ -3,11 +3,8 @@ import {
   selectIsAuthChecked,
   selectUser
 } from '../../services/selectors/userSelectors';
-import { useDispatch, useSelector } from '../../services/store';
 import { Preloader } from '@ui';
-import { useEffect } from 'react';
-import { getCookie } from '../../utils/cookie';
-import { fetchUser, setAuthChecked } from '../../services/slices/userSlice';
+import { useSelector } from '../../services/store';
 
 type ProtectedRouteProps = {
   onlyUnAuth?: boolean;
@@ -22,17 +19,7 @@ export const ProtectedRoute = ({
   const from = location.state?.from || { pathname: '/' };
   const user = useSelector(selectUser);
   const isAuthChecked = useSelector(selectIsAuthChecked);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (!isAuthChecked) {
-      const accessToken = getCookie('accessToken');
-      if (accessToken) {
-        dispatch(fetchUser());
-      } else {
-        dispatch(setAuthChecked());
-      }
-    }
-  }, [dispatch, isAuthChecked]);
+
   if (!isAuthChecked) {
     return <Preloader />;
   }
